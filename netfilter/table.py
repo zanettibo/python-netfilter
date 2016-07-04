@@ -166,5 +166,8 @@ class Table:
         if not os.WIFEXITED(status) or os.WEXITSTATUS(status):
             if not re.match(r'(iptables|ip6tables): Chain already exists', err):
                 raise IptablesError(cmd, err)
-        return out
+        if hasattr(out,'decode'):
+            return out.decode('utf8')
+        else:
+            return out
 
