@@ -162,12 +162,13 @@ class Table:
             close_fds=True)
         out, err = p.communicate()
         status = p.wait()
+        if hasattr(out,'decode'):
+            out=out.decode('utf8')
+        if hasattr(err,'decode'):
+            err=err.decode('utf8')
         # check exit status
         if not os.WIFEXITED(status) or os.WEXITSTATUS(status):
             if not re.match(r'(iptables|ip6tables): Chain already exists', err):
                 raise IptablesError(cmd, err)
-        if hasattr(out,'decode'):
-            return out.decode('utf8')
-        else:
-            return out
+        return out
 
